@@ -9,9 +9,12 @@ import (
 	"github.com/kevinmcmahon/go-artic/client"
 )
 
+// DefaultArtwork is `A Sunday on La Grande Jatte`
+const DefaultArtwork int = 27992
+
 func main() {
 	artID := flag.Int(
-		"i", int(client.DefaultArtwork), "Artwork id to fetch",
+		"i", int(DefaultArtwork), "Artwork id to fetch",
 	)
 	clientTimeout := flag.Int64(
 		"t", int64(client.DefaultClientTimeout.Seconds()), "Client timeout in seconds",
@@ -27,9 +30,8 @@ func main() {
 	)
 	flag.Parse()
 
-	articClient := client.NewArticClient()
+	articClient := client.New(*verbose)
 	articClient.SetTimeout(time.Duration(*clientTimeout) * time.Second)
-	articClient.SetVerbose(*verbose)
 
 	artwork, err := articClient.Fetch(client.ArtworkID(*artID), *saveImage)
 	if err != nil {

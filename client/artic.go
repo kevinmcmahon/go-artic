@@ -14,12 +14,10 @@ const (
 	BaseURL string = "https://aggregator-data.artic.edu/api/v1"
 	// DefaultClientTimeout is time to wait before cancelling the request
 	DefaultClientTimeout time.Duration = 30 * time.Second
-	// DefaultArtwork is `A Sunday on La Grande Jatte`
-	DefaultArtwork int = 27922
 )
 
 // ArtworkID is the id of the artwork
-type ArtworkID int
+type ArtworkID int64
 
 // ArticClient is the client for the Artic Institute Chicago API
 type ArticClient struct {
@@ -28,24 +26,20 @@ type ArticClient struct {
 	verbose bool
 }
 
-// NewArticClient creates a new ArticClient
-func NewArticClient() *ArticClient {
+// New creates a new ArticClient
+func New(verbose bool) *ArticClient {
 	return &ArticClient{
 		client: &http.Client{
 			Timeout: DefaultClientTimeout,
 		},
 		baseURL: BaseURL,
+		verbose: verbose,
 	}
 }
 
 // SetTimeout overrides the default ClientTimeout
 func (hc *ArticClient) SetTimeout(d time.Duration) {
 	hc.client.Timeout = d
-}
-
-// SetVerbose to true for debug messages
-func (hc *ArticClient) SetVerbose(v bool) {
-	hc.verbose = v
 }
 
 // Fetch retrieves the artwork as per provided artwork id

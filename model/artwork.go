@@ -155,8 +155,8 @@ type Artwork struct {
 // PrettyString cretes a pretty string of the Comic
 func (a Artwork) PrettyString() string {
 	p := fmt.Sprintf(
-		"Title: %s\nArtist: %s\nDate: %s\nDescription: %s\nImage Id: %d\n",
-		a.Title, a.Artist, a.Date, a.Description, a.ID)
+		"Image Id: %d\nTitle: %s\nArtist: %s\nDate: %s\nDescription: %s\n",
+		a.ID, a.Title, a.Artist, a.Date, a.Description)
 	return p
 }
 
