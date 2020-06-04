@@ -1,34 +1,33 @@
-package client
+package artic
 
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/kevinmcmahon/go-artic/internal/model"
 	"net/http"
 	"time"
-
-	"github.com/kevinmcmahon/go-artic/model"
 )
 
 const (
-	// BaseURL of xkcd
+	// BaseURL of Art Institute Chicago API
 	BaseURL string = "https://aggregator-data.artic.edu/api/v1"
 	// DefaultClientTimeout is time to wait before cancelling the request
-	DefaultClientTimeout time.Duration = 30 * time.Second
+	DefaultClientTimeout = 30 * time.Second
 )
 
 // ArtworkID is the id of the artwork
 type ArtworkID int64
 
-// ArticClient is the client for the Artic Institute Chicago API
-type ArticClient struct {
+// Client is the client for the Artic Institute Chicago API
+type Client struct {
 	client  *http.Client
 	baseURL string
 	verbose bool
 }
 
 // New creates a new ArticClient
-func New(verbose bool) *ArticClient {
-	return &ArticClient{
+func New(verbose bool) *Client {
+	return &Client{
 		client: &http.Client{
 			Timeout: DefaultClientTimeout,
 		},
@@ -38,12 +37,12 @@ func New(verbose bool) *ArticClient {
 }
 
 // SetTimeout overrides the default ClientTimeout
-func (hc *ArticClient) SetTimeout(d time.Duration) {
+func (hc *Client) SetTimeout(d time.Duration) {
 	hc.client.Timeout = d
 }
 
 // Fetch retrieves the artwork as per provided artwork id
-func (hc *ArticClient) Fetch(id ArtworkID, save bool) (model.Artwork, error) {
+func (hc *Client) Fetch(id ArtworkID, save bool) (model.Artwork, error) {
 	var url = hc.buildURL(id)
 	if hc.verbose {
 		fmt.Printf("[DEBUG] url : %s\n", url)
@@ -54,8 +53,8 @@ func (hc *ArticClient) Fetch(id ArtworkID, save bool) (model.Artwork, error) {
 	}
 	defer resp.Body.Close()
 
-	var artworkResult model.ArtworkResult
-	if err := json.NewDecoder(resp.Body).Decode(&artworkResult); err != nil {
+	var artworkResponse ArtworkResponse
+	if err := json.NewDecoder(resp.Body).Decode(&artworkResponse); err != nil {
 		return model.Artwork{}, err
 	}
 
@@ -64,10 +63,10 @@ func (hc *ArticClient) Fetch(id ArtworkID, save bool) (model.Artwork, error) {
 		// 	fmt.Println("Failed to save image!")
 		// }
 	}
-	return artworkResult.Artwork(), nil
+	return artworkResponse.Artwork(), nil
 }
 
 // builds the correct url
-func (hc *ArticClient) buildURL(id ArtworkID) string {
+func (hc *Client) buildURL(id ArtworkID) string {
 	return fmt.Sprintf("%s/artworks/%d", hc.baseURL, id)
 }

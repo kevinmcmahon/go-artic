@@ -1,12 +1,9 @@
-package model
+package artic
 
-import (
-	"encoding/json"
-	"fmt"
-)
+import "github.com/kevinmcmahon/go-artic/internal/model"
 
-// ArtworkResult is an individual artwork returned by the artworks api
-type ArtworkResult struct {
+// ArtworkResponse is an individual artwork returned by the artworks api
+type ArtworkResponse struct {
 	Data struct {
 		ID        int         `json:"id"`
 		APIModel  string      `json:"api_model"`
@@ -131,8 +128,8 @@ type ArtworkResult struct {
 }
 
 // Artwork creates an Artwork from an ArtworkResponse
-func (ar ArtworkResult) Artwork() Artwork {
-	return Artwork{
+func (ar ArtworkResponse) Artwork() model.Artwork {
+	return model.Artwork{
 		ID:          ar.Data.ID,
 		URL:         ar.Data.APILink,
 		Title:       ar.Data.Title,
@@ -140,31 +137,4 @@ func (ar ArtworkResult) Artwork() Artwork {
 		Date:        ar.Data.DateDisplay,
 		Artist:      ar.Data.ArtistDisplay,
 	}
-}
-
-// Artwork is the struct representation of an Artwork response
-type Artwork struct {
-	ID          int
-	URL         string
-	Title       string
-	Artist      string
-	Date        string
-	Description string
-}
-
-// PrettyString cretes a pretty string of the Comic
-func (a Artwork) PrettyString() string {
-	p := fmt.Sprintf(
-		"Image Id: %d\nTitle: %s\nArtist: %s\nDate: %s\nDescription: %s\n",
-		a.ID, a.Title, a.Artist, a.Date, a.Description)
-	return p
-}
-
-// JSON returns the JSON representation of the comic
-func (a Artwork) JSON() string {
-	cJSON, err := json.Marshal(a)
-	if err != nil {
-		return ""
-	}
-	return string(cJSON)
 }

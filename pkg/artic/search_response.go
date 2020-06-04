@@ -1,4 +1,4 @@
-package model
+package artic
 
 // SearchResponse is the struct representation of an Search Artwork api response
 type SearchResponse struct {
