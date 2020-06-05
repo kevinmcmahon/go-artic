@@ -1,7 +1,5 @@
 package artic
 
-import "github.com/kevinmcmahon/go-artic/internal/model"
-
 // ArtworkResponse is an individual artwork returned by the artworks api
 type ArtworkResponse struct {
 	Data struct {
@@ -125,16 +123,4 @@ type ArtworkResponse struct {
 	} `json:"info"`
 	Config struct {
 	} `json:"config"`
-}
-
-// Artwork creates an Artwork from an ArtworkResponse
-func (ar ArtworkResponse) Artwork() model.Artwork {
-	return model.Artwork{
-		ID:          ar.Data.ID,
-		URL:         ar.Data.APILink,
-		Title:       ar.Data.Title,
-		Description: ar.Data.Description,
-		Date:        ar.Data.DateDisplay,
-		Artist:      ar.Data.ArtistDisplay,
-	}
 }

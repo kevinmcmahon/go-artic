@@ -3,7 +3,6 @@ package artic
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/kevinmcmahon/go-artic/internal/model"
 	"net/http"
 	"time"
 )
@@ -42,20 +41,21 @@ func (hc *Client) SetTimeout(d time.Duration) {
 }
 
 // Fetch retrieves the artwork as per provided artwork id
-func (hc *Client) Fetch(id ArtworkID, save bool) (model.Artwork, error) {
+func (hc *Client) Fetch(id ArtworkID, save bool) (ArtworkResponse, error) {
+	var artworkResponse ArtworkResponse
+
 	var url = hc.buildURL(id)
 	if hc.verbose {
 		fmt.Printf("[DEBUG] url : %s\n", url)
 	}
 	resp, err := hc.client.Get(url)
 	if err != nil {
-		return model.Artwork{}, err
+		return artworkResponse, err
 	}
 	defer resp.Body.Close()
 
-	var artworkResponse ArtworkResponse
 	if err := json.NewDecoder(resp.Body).Decode(&artworkResponse); err != nil {
-		return model.Artwork{}, err
+		return artworkResponse, err
 	}
 
 	if save {
@@ -63,7 +63,7 @@ func (hc *Client) Fetch(id ArtworkID, save bool) (model.Artwork, error) {
 		// 	fmt.Println("Failed to save image!")
 		// }
 	}
-	return artworkResponse.Artwork(), nil
+	return artworkResponse, nil
 }
 
 // builds the correct url

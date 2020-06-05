@@ -6,6 +6,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/kevinmcmahon/go-artic/internal/transform"
 	"github.com/kevinmcmahon/go-artic/pkg/artic"
 )
 
@@ -33,11 +34,12 @@ func main() {
 	articClient := artic.New(*verbose)
 	articClient.SetTimeout(time.Duration(*clientTimeout) * time.Second)
 
-	artwork, err := articClient.Fetch(artic.ArtworkID(*artID), *saveImage)
+	response, err := articClient.Fetch(artic.ArtworkID(*artID), *saveImage)
 	if err != nil {
-		log.Println(err)
+		log.Fatal(err)
 	}
 
+	artwork := transform.MakeArtworkFromResponse(response)
 	if *outputType == "json" {
 		fmt.Println(artwork.JSON())
 	} else {
