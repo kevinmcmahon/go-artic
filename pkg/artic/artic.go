@@ -15,30 +15,29 @@ const (
 // ArtworkID is the id of the artwork
 type ArtworkID int64
 type ImageID string
-type ArtworkDomainObj data.ArtworkResponse
 
-// ArticRepo is the client for the Artic Institute Chicago API
-type ArticRepo struct {
+// Repo is the client for the Art Institute Chicago API
+type Repo struct {
 	dataClient  *data.Client
 	imageClient *iiif.Client
 }
 
 // New creates a new client
-func New(verbose bool) *ArticRepo {
-	return &ArticRepo{
+func New(verbose bool) *Repo {
+	return &Repo{
 		dataClient:  data.New(verbose),
 		imageClient: iiif.New(verbose),
 	}
 }
 
 // SetTimeout overrides the default ClientTimeout
-func (repo *ArticRepo) SetTimeout(d time.Duration) {
+func (repo *Repo) SetTimeout(d time.Duration) {
 	repo.dataClient.SetTimeout(d)
 	repo.imageClient.SetTimeout(d)
 }
 
 // Load retrieves the artwork as per provided artwork id
-func (repo *ArticRepo) Load(id ArtworkID, save bool) (model.Artwork, error) {
+func (repo *Repo) Load(id ArtworkID, save bool) (model.Artwork, error) {
 	var artwork model.Artwork
 	var dataResponse data.ArtworkResponse
 	var err error
@@ -54,7 +53,7 @@ func (repo *ArticRepo) Load(id ArtworkID, save bool) (model.Artwork, error) {
 		return artwork, nil
 	}
 
-	iiifImageID := iiif.ImageID(dataResponse.Data.ImageID)
-	err = repo.imageClient.SaveToDisk(iiifImageID, ".")
+	imageID := iiif.ImageID(dataResponse.Data.ImageID)
+	err = repo.imageClient.SaveToDisk(imageID, ".")
 	return artwork, err
 }
