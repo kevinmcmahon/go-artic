@@ -1,3 +1,3 @@
 module github.com/kevinmcmahon/go-artic
 
-go 1.14
+go 1.18
