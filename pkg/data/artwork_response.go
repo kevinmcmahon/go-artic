@@ -1,4 +1,4 @@
-package artic
+package data
 
 // ArtworkResponse is an individual artwork returned by the artworks api
 type ArtworkResponse struct {

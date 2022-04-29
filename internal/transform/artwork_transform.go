@@ -1,12 +1,12 @@
 package transform
 
 import (
-	"github.com/kevinmcmahon/go-artic/internal/model"
-	"github.com/kevinmcmahon/go-artic/pkg/artic"
+	"github.com/kevinmcmahon/go-artic/pkg/data"
+	"github.com/kevinmcmahon/go-artic/pkg/model"
 )
 
 // MakeArtworkFromResponse creates an Artwork
-func MakeArtworkFromResponse(ar artic.ArtworkResponse) model.Artwork {
+func MakeArtworkFromResponse(ar data.ArtworkResponse) model.Artwork {
 	return model.Artwork{
 		ID:          ar.Data.ID,
 		URL:         ar.Data.APILink,

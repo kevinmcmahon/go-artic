@@ -6,11 +6,11 @@ import (
 	"log"
 	"time"
 
-	"github.com/kevinmcmahon/go-artic/internal/transform"
 	"github.com/kevinmcmahon/go-artic/pkg/artic"
 )
 
-// DefaultArtwork is `A Sunday on La Grande Jatte`
+// DefaultArtwork is `A Sunday on La Grande Jatte` int 27992
+// Great Wave is int 24645
 const DefaultArtwork int = 27992
 
 func main() {
@@ -18,7 +18,7 @@ func main() {
 		"i", int(DefaultArtwork), "Artwork id to fetch",
 	)
 	clientTimeout := flag.Int64(
-		"t", int64(artic.DefaultClientTimeout.Seconds()), "Client timeout in seconds",
+		"t", int64(artic.DefaultClientTimeout.Seconds()), "ArticRepo timeout in seconds",
 	)
 	saveImage := flag.Bool(
 		"s", false, "Save image to current directory",
@@ -34,12 +34,11 @@ func main() {
 	articClient := artic.New(*verbose)
 	articClient.SetTimeout(time.Duration(*clientTimeout) * time.Second)
 
-	response, err := articClient.Fetch(artic.ArtworkID(*artID), *saveImage)
+	artwork, err := articClient.Load(artic.ArtworkID(*artID), *saveImage)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	artwork := transform.MakeArtworkFromResponse(response)
 	if *outputType == "json" {
 		fmt.Println(artwork.JSON())
 	} else {
