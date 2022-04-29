@@ -22,6 +22,7 @@ const (
 
 // ArtworkID is the id of the artwork
 type ArtworkID int64
+type ImageID string
 
 // Client is the client for the Artic Institute Chicago API
 type Client struct {
@@ -67,7 +68,8 @@ func (hc *Client) Fetch(id ArtworkID, save bool) (ArtworkResponse, error) {
 	}
 
 	if save {
-		if err := hc.SaveToDisk(artworkResponse.Data.ImageID, "."); err != nil {
+		imageId := ImageID(artworkResponse.Data.ImageID)
+		if err := hc.SaveToDisk(imageId, "."); err != nil {
 			fmt.Println("Failed to save image!")
 			return artworkResponse, err
 		}
@@ -81,11 +83,11 @@ func (hc *Client) buildURL(id ArtworkID) string {
 }
 
 // builds the correct url
-func (hc *Client) buildImageURL(id string) string {
+func (hc *Client) buildImageURL(id ImageID) string {
 	return fmt.Sprintf("%s/2/%s/full/843,/0/default.jpg", hc.baseImageURL, id)
 }
 
-func (hc *Client) SaveToDisk(imageId string, savePath string) error {
+func (hc *Client) SaveToDisk(imageId ImageID, savePath string) error {
 
 	var url = hc.buildImageURL(imageId)
 
